@@ -34,7 +34,7 @@ This project uses [toolbox](https://raw.githubusercontent.com/slagyr/agent-skill
 
 Look for `.skills/toolbox.json` in the project root.
 
-- **If it exists**: skills have been fetched before. Check freshness (see §4).
+- **If it exists**: skills have been fetched before. Check for updates (see §4).
 - **If it doesn't exist**: bootstrap (see §2).
 
 ### 2. Bootstrap (First Run)
@@ -45,33 +45,36 @@ When `.skills/toolbox.json` is missing:
 2. Parse the `## Skills` section of `AGENTS.md` for skill links. Extract each `[name](url)` pair.
 3. For each declared skill (including toolbox itself):
    a. Fetch `SKILL.md` from the skill's URL.
-   b. Discover reference files by parsing relative markdown links in `SKILL.md` — patterns like `[text](references/foo.md)` or `[text](some/path.md)`. Only include links to relative paths (not absolute URLs or anchors).
-   c. Compute the base URL by removing `SKILL.md` from the skill's URL. Fetch each discovered reference file relative to that base URL.
-   d. Write all fetched files into `.skills/{name}/`, preserving directory structure.
+   b. Compute the SHA-256 hash of the fetched `SKILL.md` content.
+   c. Discover reference files by parsing relative markdown links in `SKILL.md` — patterns like `[text](references/foo.md)` or `[text](some/path.md)`. Only include links to relative paths (not absolute URLs or anchors).
+   d. Compute the base URL by removing `SKILL.md` from the skill's URL. Fetch each discovered reference file relative to that base URL.
+   e. Write all fetched files into `.skills/{name}/`, preserving directory structure.
 4. Write `.skills/toolbox.json` with the manifest (see §3).
 5. Ensure `.skills/` is listed in the project's `.gitignore`. If not, add it.
 
 ### 3. The Manifest — `.skills/toolbox.json`
 
-The manifest tracks all cached skills, their source URLs, fetched files, and freshness metadata.
+The manifest tracks all cached skills, their source URLs, fetched files, and content hashes for change detection.
 
 ```json
 {
-  "freshness_hours": 24,
   "skills": {
     "toolbox": {
       "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/toolbox/SKILL.md",
       "fetched_at": "2026-03-06T12:00:00Z",
+      "sha256": "a1b2c3d4e5f6...",
       "files": ["SKILL.md"]
     },
     "tdd": {
       "url": "https://raw.githubusercontent.com/slagyr/agent-skills/main/tdd/SKILL.md",
       "fetched_at": "2026-03-06T12:00:00Z",
+      "sha256": "f6e5d4c3b2a1...",
       "files": ["SKILL.md"]
     },
     "braids": {
       "url": "https://raw.githubusercontent.com/slagyr/braids/main/braids/SKILL.md",
       "fetched_at": "2026-03-06T12:00:00Z",
+      "sha256": "1a2b3c4d5e6f...",
       "files": [
         "SKILL.md",
         "references/worker.md",
@@ -92,26 +95,33 @@ The manifest tracks all cached skills, their source URLs, fetched files, and fre
 
 | Field | Description |
 |-------|-------------|
-| `freshness_hours` | How many hours before a skill is considered stale. Default: `24`. |
 | `skills` | Map of skill name → skill entry. |
 | `skills.{name}.url` | The URL from which `SKILL.md` was fetched. |
 | `skills.{name}.fetched_at` | ISO 8601 timestamp of when the skill was last fetched. |
+| `skills.{name}.sha256` | SHA-256 hash of the skill's `SKILL.md` content at fetch time. Used to detect remote changes. |
 | `skills.{name}.files` | List of all files cached for this skill, relative to `.skills/{name}/`. |
 
-### 4. Check Freshness
+### 4. Check for Updates
 
-When `.skills/toolbox.json` exists, compare each skill's `fetched_at` to the current time.
+Toolbox detects updates by comparing content, not by time. Each skill's `sha256` in the manifest is the hash of its `SKILL.md` at fetch time.
 
-- If `now - fetched_at > freshness_hours`: the skill is **stale**. Report it to the user:
-  ```
-  Stale skills detected:
-    - tdd (last fetched 3 days ago)
-    - braids (last fetched 2 days ago)
-  Run skill update to refresh.
-  ```
-- If all skills are fresh: proceed silently. Do not report anything.
+**On session start**, if the cached skills exist, proceed silently. Do not fetch anything automatically — the cached versions are ready to use.
 
-**Never auto-update.** Always ask the user before fetching new versions.
+**When the user asks** (e.g., "check for skill updates", "are my skills up to date?"):
+
+1. For each skill in the manifest, fetch `SKILL.md` from the URL.
+2. Compute the SHA-256 hash of the fetched content.
+3. Compare to the stored `sha256` in the manifest.
+4. Report results:
+   ```
+   Skill updates available:
+     - braids (changed)
+     - tdd (up to date)
+   Update skills? [y/n]
+   ```
+5. If the user confirms, proceed with §5 (Update Skills) for the changed skills.
+
+**Automated check (optional):** If the agent platform supports lightweight HTTP requests at session start, toolbox may proactively check for updates and report only if changes are detected. This is a nice-to-have, not required. Never auto-update — always ask the user before overwriting cached skills.
 
 ### 5. Update Skills
 
@@ -122,7 +132,7 @@ When the user asks to update skills (e.g., "update skills", "refresh skills"):
    a. Re-fetch `SKILL.md` from the URL.
    b. Re-discover and fetch reference files.
    c. Overwrite the cached files in `.skills/{name}/`.
-   d. Update `fetched_at` in the manifest.
+   d. Update `fetched_at` and `sha256` in the manifest.
 3. Remove any cached skills that are no longer declared in `AGENTS.md`.
 4. Write the updated `.skills/toolbox.json`.
 

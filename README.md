@@ -1,8 +1,8 @@
 # Agent Lib
 
-A library of reusable skills, commands, and other agent documents for AI coding agents.
+A library of reusable skills, commands, and other agent components for AI coding agents.
 
-Skills are managed by [toolbox](https://github.com/slagyr/toolbox).
+Components are managed by [toolbox](https://github.com/slagyr/toolbox).
 
 ## Structure
 
@@ -12,18 +12,22 @@ agent-lib/
   commands/     # Commands define reusable agent actions
 ```
 
-## Using Skills
+## Usage
 
-Add a `## Skills` section to your project's `AGENTS.md` and reference skills by URL:
+Add component sections to your project's boot file (`AGENTS.md`, `CLAUDE.md`, etc.) and reference components by URL:
 
 ```markdown
 ## Skills
 
 This project uses [toolbox](https://raw.githubusercontent.com/slagyr/toolbox/main/SKILL.md)
-to manage skills. If `.skills/` doesn't exist, fetch the toolbox SKILL.md
+to manage components. If `.toolbox/` doesn't exist, fetch the toolbox SKILL.md
 from the URL above and follow its instructions.
 
 - [tdd](https://raw.githubusercontent.com/slagyr/agent-lib/main/skills/tdd/SKILL.md)
+
+## Commands
+
+- [test](https://raw.githubusercontent.com/slagyr/agent-lib/main/commands/test.md)
 ```
 
 See the [toolbox README](https://github.com/slagyr/toolbox) for full setup instructions.
@@ -33,3 +37,7 @@ See the [toolbox README](https://github.com/slagyr/toolbox) for full setup instr
 | Skill | Description |
 |-------|-------------|
 | [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
+
+## Available Commands
+
+*None yet.*

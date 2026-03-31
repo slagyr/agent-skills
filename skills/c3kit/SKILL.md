@@ -61,6 +61,8 @@ Non-bang returns entity with error objects in failed fields. Bang throws. Use `s
 (schema/conform! user-schema raw-data)
 ```
 
+More complete documentation for Schema is available here: https://github.com/cleancoders/c3kit-apron/blob/master/SCHEMA.md
+
 ### Legend
 
 A legend is a registry of schemas indexed by `:kind`. Build it once, then use kind-dispatched operations.
@@ -95,6 +97,16 @@ Key functions:
 ```
 
 ### Time
+
+Starting point for dealing with time.
+
+Creation:
+
+```clojure
+(time/now)
+(time/utc 2026 3 31)
+(time/local 2026 3 31 14 13)
+```
 
 Human-readable duration constructors. Designed for threading:
 

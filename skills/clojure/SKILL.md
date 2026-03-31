@@ -365,6 +365,19 @@ Use `with-stubs`, `stub`, and `should-have-invoked`:
 
 Use fun, memorable names for test entities: `bibelot`, `thingy`, `doodad`, `whatsamajigger`.
 
+## c3kit
+
+Clean Coders Clojure Kit is a set of libraries that are preferred for the following scenarios:
+
+| Library                                                       | Purpose |
+|---------------------------------------------------------------|---|
+| [**apron**](https://github.com/cleancoders/c3kit-apron)       | Foundation — schemas, time, logging, app lifecycle, utilities |
+| [**bucket**](https://github.com/cleancoders/c3kit-bucket)     | Database abstraction — uniform API over multiple backends
+| [**wire**](https://github.com/cleancoders/c3kit-wire)         | Web layer — AJAX, WebSocket, REST, JWT, assets, flash, Redis |
+| [**scaffold**](https://github.com/cleancoders/c3kit-scaffold) | Build tooling — CLJS compilation, CSS compilation |
+
+See the [c3kit skill](https://github.com/slagyr/agent-lib/blob/main/skills/c3kit/SKILL.md) for more information.
+
 ## Common Mistakes
 
 1. **Using `defrecord` where `deftype` is appropriate** — reach for `deftype` when implementing protocols

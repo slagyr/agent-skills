@@ -20,10 +20,13 @@ Pick up the next ready bead and work on it.
 
 ## When Complete
 
-1. Ensure all tests pass
-2. Run `bd close <id>` to mark the issue complete
-3. Run `bd sync` to sync changes
-4. Commit code changes with a descriptive message
+1. Ensure all unit tests/specs pass
+2. Ensure relevant feature scenarios pass and are not pending
+3. Do not close the bead if approved feature scenarios remain pending
+4. Do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it
+5. Only then run `bd close <id>` to mark the issue complete
+6. Run `bd sync` to sync changes
+7. Commit code changes with a descriptive message
 
 ## Arguments
 

@@ -25,7 +25,7 @@ Pick up the next ready bead and work on it.
 3. If the bead references approved feature scenarios, do not close the bead while those scenarios remain pending
 4. If the bead references approved feature scenarios, do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it
 5. Only then run `bd close <id>` to mark the issue complete
-6. Run `bd sync` to sync changes
+6. Sync beads state using the installed bd version (`bd sync` if available; otherwise use the equivalent `bd dolt` commands)
 7. Commit code changes with a descriptive message
 
 ## Arguments

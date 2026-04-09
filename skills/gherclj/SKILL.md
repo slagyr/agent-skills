@@ -91,6 +91,20 @@ If your project uses a single framework, you can use its native assertions direc
 (g/should= expected-vec (g/get :items))
 ```
 
+## Running Specific Scenarios
+
+You can run only specific scenarios by passing `file:line` selectors as positional arguments. A selector matches the scenario whose declaration contains the given line.
+
+```bash
+gherclj features/adventure/dragon_cave.feature:42
+
+# Run multiple scenarios at once
+gherclj features/adventure/dragon_cave.feature:42 \
+        features/adventure/moon_castle.feature:73
+```
+
+Location selectors combine with normal options like `-f`, `-e`, `-o`, and tag filters.
+
 ## Verification
 
 After implementing steps, always run the feature specs and verify:

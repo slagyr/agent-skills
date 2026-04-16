@@ -16,6 +16,7 @@ agent-lib/
 |-------|-------------|
 | [clojure](skills/clojure/SKILL.md) | Clojure coding conventions. Naming, formatting, function design, state management, threading, cross-platform patterns. |
 | [c3kit](skills/c3kit/SKILL.md) | Guide to the c3kit ecosystem (apron, bucket, wire, scaffold). Schemas, database API, web layer, app lifecycle. |
+| [c3kit-schema](skills/c3kit-schema/SKILL.md) | Deep reference for c3kit.apron.schema. Four operations, spec anatomy, nested types, entity-level specs, error handling, silent-failure trap. |
 | [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
 | [gherkin](skills/gherkin/SKILL.md) | Writing good Gherkin feature files. Scenario structure, step clarity, tag conventions. |
 | [gherclj](skills/gherclj/SKILL.md) | Implementing gherclj step definitions. defgiven/defwhen/defthen conventions, assertions, state management, running scenarios. |
@@ -24,6 +25,7 @@ For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your b
 
 ```markdown
 - [tdd](https://raw.githubusercontent.com/slagyr/agent-lib/main/skills/tdd/SKILL.md)
+- [c3kit-schema](https://raw.githubusercontent.com/slagyr/agent-lib/main/skills/c3kit-schema/SKILL.md)
 ```
 
 ## Available Commands

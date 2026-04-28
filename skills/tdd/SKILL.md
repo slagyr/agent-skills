@@ -286,6 +286,16 @@ If you need the return value from a function that prints:
 
 **Before closing a bead, run the full test suite and verify the output is clean** — only dots and the summary line. If you see any text that isn't from the test framework, fix it.
 
+## Test DON'Ts
+
+Tests must be fast, deterministic, and isolated. Real I/O makes tests slow, flaky, and dependent on external state.
+
+- **No `sleep` calls** — if you're waiting for something, the design needs a seam to inject timing control
+- **No filesystem access** — unless the code under test is explicitly filesystem management; prefer mocking or an in-memory implementation
+- **No HTTP requests** — mock the HTTP layer; tests should not depend on network availability or remote state
+- **No other I/O** — stdin/stdout beyond test output, sockets, message queues — prefer mocked or in-memory equivalents
+- **No external database interaction** — use an in-memory implementation or repository stub; never hit a real database in a unit test
+
 ## Common Mistakes
 
 1. **Writing code before tests** - Violates the fundamental principle

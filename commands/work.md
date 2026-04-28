@@ -10,13 +10,16 @@ Pick up the next ready bead and work on it.
 
 ## Steps
 
-1. Run `bd ready` to find issues with no blockers
-2. If no issues are ready, inform the user and stop
-3. Select the highest priority issue (lowest P number) that is NOT in_progress
-4. If the only ready issues are in_progress, select the highest priority issue and ask the user if they'd like to proceed. If they decline, stop
-5. Show the issue details to the user with `bd show <id>`
-6. Run `bd update <id> --status=in_progress` to claim it
-7. Implement the issue, following any applicable project skills and conventions
+1. Pull the latest code with `git pull`
+2. Sync the latest bead state with `bd sync` (or equivalent `bd dolt` commands if `bd sync` is unavailable)
+3. Run `bd ready` to find issues with no blockers
+4. If no issues are ready, inform the user and stop
+5. Select the highest priority issue (lowest P number) that is NOT in_progress
+6. If the only ready issues are in_progress, select the highest priority issue and ask the user if they'd like to proceed. If they decline, stop
+7. Show the issue details to the user with `bd show <id>`
+8. Run `bd update <id> --status=in_progress` to claim it
+9. Sync bead state again with `bd sync` so the claim is visible to other workers
+10. Implement the issue, following any applicable project skills and conventions
 
 ## When Complete
 

@@ -12,14 +12,35 @@ Pick up the next ready bead and work on it.
 
 1. Pull the latest code with `git pull`
 2. Sync the latest bead state with `bd dolt pull`
-3. Run `bd ready` to find issues with no blockers
-4. If no issues are ready, inform the user and stop
-5. Select the highest priority issue (lowest P number) that is NOT in_progress
-6. If the only ready issues are in_progress, select the highest priority issue and ask the user if they'd like to proceed. If they decline, stop
-7. Show the issue details to the user with `bd show <id>`
-8. Run `bd update <id> --status=in_progress` to claim it
-9. Push the claim with `bd dolt push` so other workers see it as taken
-10. Implement the issue, following any applicable project skills and conventions
+3. Branch on `$ARGUMENTS`:
+   - **If a bead ID was provided** → follow "Targeted bead" below. Do not fall back to the ready queue.
+   - **If no argument was provided** → follow "Pick from ready queue" below.
+
+### Targeted bead (a specific ID was passed)
+
+The user named this bead deliberately. Treat it as a hard constraint: never substitute a different bead, never auto-pick a dependency, never silently fall back to the queue. If the named bead cannot be worked right now, **stop and report** — let the user decide what to do.
+
+1. Run `bd show <id>` to load the bead. If the ID does not exist, stop and tell the user.
+2. Check status:
+   - If `closed` / done / already complete → **stop**. Report the status and ask whether the user meant a different bead or wants to reopen this one. Do not pick another bead.
+   - If `in_progress` → **stop**. Report that the bead is already claimed (likely by another worker) and ask whether to proceed anyway. Do not silently take it over.
+   - If `blocked` or has unmet dependencies → **stop**. List the blocking beads and ask the user which one they want to work on. Do not auto-pick the dependency.
+   - If `ready` (or otherwise workable) → continue.
+3. Show the issue details to the user with `bd show <id>`.
+4. Run `bd update <id> --status=in_progress` to claim it.
+5. Push the claim with `bd dolt push` so other workers see it as taken.
+6. Implement the issue, following any applicable project skills and conventions.
+
+### Pick from ready queue (no argument)
+
+1. Run `bd ready` to find issues with no blockers.
+2. If no issues are ready, inform the user and stop.
+3. Select the highest priority issue (lowest P number) that is NOT in_progress.
+4. If the only ready issues are in_progress, select the highest priority issue and ask the user if they'd like to proceed. If they decline, stop.
+5. Show the issue details to the user with `bd show <id>`.
+6. Run `bd update <id> --status=in_progress` to claim it.
+7. Push the claim with `bd dolt push` so other workers see it as taken.
+8. Implement the issue, following any applicable project skills and conventions.
 
 ## When Complete
 
@@ -34,4 +55,4 @@ Pick up the next ready bead and work on it.
 
 ## Arguments
 
-$ARGUMENTS - Optional: specific issue ID to work on instead of picking from ready queue
+$ARGUMENTS - Optional: a specific issue ID. When provided, this is a hard constraint: work that exact bead or stop. Never substitute a different bead (not its dependencies, not the next ready bead, not anything else). If it can't be worked, surface the reason to the user and let them decide.

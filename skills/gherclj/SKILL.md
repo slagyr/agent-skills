@@ -147,6 +147,58 @@ gherclj features/adventure/dragon_cave.feature \
 
 Feature paths and location selectors combine with normal options like `-f`, `-e`, `-o`, and tag filters.
 
+## Reuse Before Inventing
+
+Before drafting a new `defgiven`/`defwhen`/`defthen`, run `gherclj steps`
+to see every registered step's phrase, docstring, and source location
+grouped by Given/When/Then. This is the authoritative list — reuse before
+inventing.
+
+A new step-def is a real cost — one more thing to maintain, learn,
+and grep for. Each scope that grows its own step-defs is a place
+where future scenarios won't benefit from shared tooling. Start by
+reusing, even if the existing step needs a small extension.
+
+Common patterns that often already exist in mature projects:
+
+- HTTP assertions → `the last outbound HTTP request matches:` and
+  `an outbound HTTP request to "<url>" matches:` with k-v tables
+- File/data inspection → `the EDN file "<relpath>" contains:` with
+  path/value rows
+- File existence → `a file "<name>" exists with content "<X>"` plus
+  the negative variant for "does not exist"
+- Tool invocation → `the tool "<name>" is called with:` + `the tool
+  result lines match:` / `contains ...`
+- Session state → `session "<name>" has transcript matching:`
+
+If you're adding a new Given step phrase, grep all existing step files
+for the same or similar pattern first to avoid ambiguous match errors —
+gherclj auto-discovers all step namespaces on the classpath via
+`helper!` registrations.
+
+## Docstrings on Step Defs
+
+gherclj v0.9.0+ accepts an optional docstring between the phrase and
+the arg vector:
+
+```clojure
+(defgiven setup-crew "the following users exist:"
+  "Sets :users atom (test only — does NOT write disk)."
+  [table]
+  ...)
+```
+
+Add a docstring whenever the phrase alone doesn't convey the contract:
+
+- side-effect surface (disk vs atom)
+- sync/async behavior (polling, timeouts)
+- state-slot being read/written
+- gotchas (overwrites, bypasses production loader)
+
+Skip docstrings on trivial matchers (`the exit code is N`) — the phrase is
+the contract. Docstrings surface in `gherclj steps` output, so they're the
+first thing the next agent reads.
+
 ## Discovering and Auditing Steps
 
 ```bash

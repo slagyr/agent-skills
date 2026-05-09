@@ -14,12 +14,17 @@ agent-lib/
 
 | Skill | Description |
 |-------|-------------|
+| [architecture](skills/architecture/SKILL.md) | Architecture principles: Screaming Architecture, domain-as-interface seams (Ports & Adapters at the directory level), implicit/explicit API pairs. |
+| [beads-multi-worker](skills/beads-multi-worker/SKILL.md) | Multi-worker discipline for shared beads trackers. Push-after-every-write, pull-at-handoff, session close protocol, conflict resolution. |
 | [clojure](skills/clojure/SKILL.md) | Clojure coding conventions. Naming, formatting, function design, state management, threading, cross-platform patterns. |
 | [c3kit](skills/c3kit/SKILL.md) | Guide to the c3kit ecosystem (apron, bucket, wire, scaffold). Schemas, database API, web layer, app lifecycle. |
 | [c3kit-schema](skills/c3kit-schema/SKILL.md) | Deep reference for c3kit.apron.schema. Four operations, spec anatomy, nested types, entity-level specs, error handling, silent-failure trap. |
-| [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
-| [gherkin](skills/gherkin/SKILL.md) | Writing good Gherkin feature files. Scenario structure, step clarity, tag conventions. |
+| [gherkin](skills/gherkin/SKILL.md) | Writing good Gherkin feature files. Scenario structure, step clarity, tag conventions, common traps. |
 | [gherclj](skills/gherclj/SKILL.md) | Implementing gherclj step definitions. defgiven/defwhen/defthen conventions, assertions, state management, running scenarios. |
+| [logging](skills/logging/SKILL.md) | Structured logging discipline. Levels, event-keyword conventions (:domain/action), feature-test assertions on log entries. |
+| [refactor](skills/refactor/SKILL.md) | Refactoring lessons. Extract method/namespace, rename, magic-number-to-constant, the discipline of rewiring callers immediately. |
+| [smells](skills/smells/SKILL.md) | Code smells. Dead code, unused bindings, duplication, magic numbers, long parameter lists, god namespaces, sleeping in tests, testing smells. |
+| [tdd](skills/tdd/SKILL.md) | Test-Driven Development for Clojure. Red-Green-Refactor, the Three Laws, Arrange-Act-Assert with Speclj. |
 
 For [toolbox](https://github.com/slagyr/toolbox) managed projects, add to your boot file:
 

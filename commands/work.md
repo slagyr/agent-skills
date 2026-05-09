@@ -53,6 +53,28 @@ The user named this bead deliberately. Treat it as a hard constraint: never subs
 7. Push bead state with `bd dolt push`
 8. Commit code changes with a descriptive message
 
+## Common Traps
+
+### Premature close
+
+Beads get closed before the work is actually done. Always verify with
+the project's feature/test runner before trusting "it's done." Always
+check that `@wip` was removed AND the scenarios pass. If the project
+uses a verifier (separate `/verify` flow), mark the bead `unverified`
+rather than `closed` — let the verifier confirm.
+
+### Dated defers bite back
+
+`bd defer <id> --until=2026-05-01` on a backlog bead quietly ticks
+down and surprises whoever's triaging when the date arrives. For
+"not now, no specific deadline," use `bd defer <id>` with **no**
+`--until` flag. Un-defer with `bd update <id> --status=open` — NOT
+`--defer=""`, which clears the date but leaves the status deferred.
+
+Rule of thumb: only use dated defers when there's a real external
+dependency (a release date, an upstream fix, an infra upgrade).
+Everything else is undated backlog.
+
 ## Arguments
 
 $ARGUMENTS - Optional: a specific issue ID. When provided, this is a hard constraint: work that exact bead or stop. Never substitute a different bead (not its dependencies, not the next ready bead, not anything else). If it can't be worked, surface the reason to the user and let them decide.

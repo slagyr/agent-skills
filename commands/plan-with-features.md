@@ -10,7 +10,7 @@ Extends the [/plan](plan.md) workflow with Gherkin feature specification using [
 
 Follow all instructions from `/plan`. This command adds a **feature-first** workflow: before creating beads, specify the desired behavior as Gherkin feature files.
 
-Load the [`gherkin`](https://raw.githubusercontent.com/slagyr/agent-lib/main/skills/gherkin/SKILL.md) skill for writing good scenarios.
+Load the [`gherclj`](https://raw.githubusercontent.com/slagyr/gherclj/master/SKILL.md) skill for writing good scenarios.
 
 ## Feature-First Workflow
 

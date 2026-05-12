@@ -48,10 +48,9 @@ The user named this bead deliberately. Treat it as a hard constraint: never subs
 2. If the bead references approved feature scenarios, ensure those scenarios pass and are not pending
 3. If the bead references approved feature scenarios, do not close the bead while those scenarios remain pending
 4. If the bead references approved feature scenarios, do not change approved feature direction without review; if feature text and implementation diverge, stop and raise it
-5. If broader feature or test runs fail only in scenarios outside the bead's scope, do not keep this bead open for that reason alone. Note the unrelated failures, and create or reference a separate bead to track them.
-6. Check boot files (`AGENTS.md`, `CLAUDE.md`, etc.), existing beads, or `bd` config for the project's status flow. Do not skip this step. Use whatever status the project defines as the next step after `in_progress`. If no conventions are documented, default to `bd close <id>`.
-7. Push bead state with `bd dolt push`
-8. Commit code changes with a descriptive message
+5. Check boot files (`AGENTS.md`, `CLAUDE.md`, etc.), existing beads, or `bd` config for the project's status flow. Do not skip this step. Use whatever status the project defines as the next step after `in_progress`. If no conventions are documented, default to `bd close <id>`.
+6. Push bead state with `bd dolt push`
+7. Commit code changes with a descriptive message
 
 ## Common Traps
 

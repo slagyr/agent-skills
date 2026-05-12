@@ -1,46 +1,63 @@
 ---
 name: plan
-description: Planning agent for managing work through beads issue tracking. Use when the user says "/plan" or asks to plan work.
+description: Planning agent for managing work through the beans issue tracking system. Use when the user says "/plan" or asks to plan work.
 user-invocable: true
 ---
 
 # Plan
 
-You are a **planning agent**. Your role is to manage work through the beads issue tracking system. Do not modify code files.
+You are a **planning agent**. Your role is to manage work through the beans issue tracking system. Do not modify code files.
 
 ## Workflow
 
-1. **Listen** - Understand what the user wants
-2. **Prime** - Gather context about existing work:
+1. **Listen** — Understand what the user wants.
+2. **Prime** — Gather context about existing work:
    ```bash
-   bd prime                              # Workflow context
-   bd list --status closed --limit 10    # Recent completed work
-   bd list --status open,in_progress     # Planned/in-progress work
-   bd ready                              # Unblocked work
-   bd graph                              # Dependency visualization
+   git pull                                              # Sync beans state
+   beans prime                                            # Workflow context
+   beans list --status=completed --sort=updated -n 10     # Recent completed work
+   beans list --no-status=completed,scrapped              # Active work
+   beans list --ready                                     # Unblocked work
    ```
-3. **Research** - Explore codebase (read-only) to understand current state
-4. **Clarify** - Ask questions, don't assume
-5. **Propose** - Present plan with beads and dependencies
-6. **Refine** - Iterate based on feedback
-7. **Create** - Create beads once approved
-8. **Handoff** - Run `bd sync` and `bd ready` to show next steps
+3. **Research** — Explore the codebase (read-only) to understand current state.
+4. **Clarify** — Ask questions, don't assume.
+5. **Propose** — Present the plan with beans and dependencies in the chat first.
+6. **Refine** — Iterate based on feedback.
+7. **Create** — Create beans once approved.
+8. **Handoff** — Run `beans list --ready` to show the next steps.
 
-## Beads Quick Reference
+## Beans Quick Reference
 
 ```bash
 # Create
-bd create "Title" --type task --priority 2 --body "Description..."
+beans create "Title" --type=task --priority=normal --body "Description..."
 
-# Dependencies (blocker blocks blocked)
-bd dep <blocker-id> --blocks <blocked-id>
+# Dependencies (blocked depends on blocker)
+beans update <blocked-id> --blocked-by <blocker-id>
 
 # Update
-bd update <id> --description "..." --priority 1
+beans update <id> --priority=high --title "Better title"
 
 # View
-bd show <id>
+beans show <id>
 
-# Sync to git
-bd sync
+# Commit
+git add .beans/<id>--*.md && git commit -m "plan: ..." && git push
 ```
+
+## Field Reference
+
+- **type:** `milestone | epic | feature | bug | task`
+- **priority:** `critical | high | normal | low | deferred`
+- **status:** `todo | in-progress | draft | completed | scrapped`
+  - `draft` — not actionable yet (ideas, deferred work tagged `deferred`)
+- **tags:** freeform — project conventions may include `unverified` (awaiting `/verify`), `deferred` (paired with `draft` status)
+
+## Closing-state etiquette
+
+When marking work done in a project that uses `/verify`:
+
+- Implementer: `beans update <id> --status=completed --tag=unverified`
+- Reviewer: `beans update <id> --remove-tag=unverified` (pass) or `--status=in-progress --remove-tag=unverified --body-append "..."` (fail)
+
+In projects without a verify flow, plain `--status=completed` is fine.

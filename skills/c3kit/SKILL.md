@@ -464,7 +464,7 @@ Run: `clj -M:css once` or `clj -M:css auto`
 1. **Using `api/find` without knowing the return type** — `find` returns a seq, `ffind` returns a single entity, `entity` looks up by id
 2. **Forgetting safety guard** — `api/clear` and `api/delete-all` throw unless wrapped in `api/with-safety-off`
 3. **Skipping `conform!`** — always conform entities through their schema before persisting
-4. **Returning values from `defthen` without asserting** — produces 0 assertions (see gherclj skill)
+4. **Returning values from `defthen` without asserting** — produces 0 assertions (see the [gherclj](https://github.com/slagyr/gherclj) repo for step-definition guidance)
 5. **Using `clojure.test` assertions** — the ecosystem uses speclj (`should=`, `should-throw`, etc.)
 6. **Wrong alias for `corec`** — it's `ccc`, not `corec` or `core`
 7. **Calling protocol methods directly** — use the public API functions (`api/entity`, not `(-entity impl ...)`), protocol methods are prefixed with `-` to signal they're internal

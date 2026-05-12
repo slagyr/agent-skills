@@ -57,7 +57,13 @@ If stray output appears, identify the source file from the bean's diff and fail 
 CLI tools that intentionally write to stdout are the legitimate exception — flag for confirmation rather than auto-failing.
 
 ### 4. Test-quality smell review
-For each new or substantially modified test file in the bean's diff, scan for the following patterns. Flag any matches.
+Run this in TWO passes:
+
+**Pass A — diff scope (blocking):** For each new or substantially modified test file in the bean's diff, scan for the patterns below. Any match without a documented exception (see "Allowed overrides") **fails verification**.
+
+**Pass B — tree scope (informational):** Run `grep -rn "Thread/sleep" spec/` (and equivalents for the other patterns) across the entire spec tree. Anything found is reported as a smell summary — file:line plus the matched pattern — even if outside the bean's diff. This catches historical smells that escaped earlier review. It does NOT fail the bean by default, but the reviewer should surface the list to the user with a recommendation to file follow-up beans.
+
+The pattern set is the same for both passes:
 
 1. **`Thread/sleep`** — synchronization missing. The test should poll a condition, await a promise, or inject timing control.
 2. **Real network** — un-stubbed HTTP, WebSocket, or raw socket calls. Tests should mock the transport.
@@ -76,7 +82,9 @@ These patterns have legitimate uses (a smoke test against a real endpoint, an in
 
 If either is present, accept the flag. If neither, fail with the specific pattern and location: *"Flagged `<X>` in `<file:line>` with no inline justification or bean-documented exception. Either refactor, or add a brief note explaining why."*
 
-### 5. Test speed regression (optional)
+Overrides apply to Pass A (blocking) only. In Pass B (informational), report every match — overrides don't suppress historical-debt reporting, they only prevent the current bean from failing.
+
+### 5. Test speed regression
 If `.verify-baseline.edn` exists at the project root, compare actual test timings against it. Format:
 
 ```edn
@@ -91,7 +99,7 @@ For each test type the bean exercises:
 
 On green verification, update `.verify-baseline.edn` with the latest readings. The file should be in `.gitignore` — absolute timings don't transfer between machines.
 
-If no baseline file exists, skip this check silently — it's opt-in.
+If no baseline file exists, **do not skip silently** — seed it with the current run's measurements (writing to `.verify-baseline.edn`) and add a note to the report that the baseline was seeded. Future runs catch regressions. A missing baseline is opt-in only the first time; once seeded, the check is permanent.
 
 ### 6. Acceptance criteria met
 - Read the `## Acceptance Criteria` section of the bean.

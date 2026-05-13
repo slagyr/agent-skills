@@ -50,8 +50,28 @@ git add .beans/<id>--*.md && git commit -m "plan: ..." && git push
 - **type:** `milestone | epic | feature | bug | task`
 - **priority:** `critical | high | normal | low | deferred`
 - **status:** `todo | in-progress | draft | completed | scrapped`
-  - `draft` — not actionable yet (ideas, deferred work tagged `deferred`)
+  - `draft` — not actionable yet (ideas, deferred work tagged `deferred`, or beans awaiting acceptance scenarios — see "Drafts and promotion" below)
 - **tags:** freeform — project conventions may include `unverified` (awaiting `/verify`), `deferred` (paired with `draft` status)
+
+## Drafts and promotion
+
+A bean is **created in `draft`** when the intent is clear enough to capture but the acceptance contract isn't written yet. A draft holds the title, problem statement, proposed scope, and design notes — but no runnable acceptance criteria.
+
+A bean is **promoted to `todo`** only after concrete acceptance scenarios exist. What counts as a scenario depends on the project:
+
+- Gherkin features (`.feature` files, typically with `@wip`) — see `/plan-with-features` for the feature-first variant.
+- Specs / test cases enumerated by name and location in the bean body.
+- An exact runnable verification command for each acceptance criterion.
+
+A `todo` bean without acceptance criteria has no contract; workers can't tell when they're done, and reviewers can't tell whether they got there. Keep it in `draft` until that's resolved.
+
+**Promotion workflow:**
+
+1. Write scenarios (commit them if they're files like `.feature` or specs).
+2. Update the bean body to reference scenario locations (paths + line numbers, or `bb spec <path>` commands).
+3. `beans update <id> --status=todo`.
+
+This pairs with the project-specific scenario discipline (e.g. `/plan-with-features`'s "feature-first, always" rule). The draft-status contract is general; the scenario format is per-project.
 
 ## Closing-state etiquette
 

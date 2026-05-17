@@ -94,8 +94,11 @@ If `.verify-baseline.edn` exists at the project root, compare actual test timing
 
 For each test type the bean exercises:
 - Compute `total-ms / example-count` from the actual run.
-- Flag if actual exceeds `1.5x` the baseline `:avg-ms-per-example`.
+- If the run has **20 or more examples**, flag if actual exceeds `1.5x` the baseline `:avg-ms-per-example`.
+- If the run has **fewer than 20 examples**, do **not** fail on `:avg-ms-per-example` against the global baseline. Tiny targeted runs are dominated by fixed startup overhead and are not comparable to a suite-wide average.
+- For tiny targeted runs, if you already ran the **full suite for that test type** during verification, use the full-suite run for the `:avg-ms-per-example` comparison instead.
 - Flag if any single test exceeds `:max-ms-per-example`.
+- When skipping the average gate for a tiny targeted run, report the measured `ms/example` as informational context in the verification notes.
 
 On green verification, update `.verify-baseline.edn` with the latest readings. The file should be in `.gitignore` — absolute timings don't transfer between machines.
 

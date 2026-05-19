@@ -58,6 +58,20 @@ git pull --rebase
 
 You don't know what landed while you were away.
 
+## Sequence pull → read → write — never parallelize
+
+`git pull --rebase`, `beans show`, `beans list`, and bean writes (`beans update`, `beans create`) are **state-dependent**. They MUST run sequentially.
+
+The trap: agent harnesses that support parallel tool calls make it tempting to batch `git pull --rebase` and `beans show <id>` in one parallel block. That is unsafe. The bean read can complete against the pre-pull state, giving you a stale view that contradicts the post-pull truth. Symptom: "first check says not ready, second check says ready, with no apparent change between them."
+
+Rule:
+
+- Run `git pull --rebase` alone. Wait for it to finish.
+- THEN run `beans show` / `beans list` / any verification reads.
+- THEN run bean writes, commits, pushes — one at a time.
+
+Do NOT issue these in the same parallel batch, even when the harness allows it. The performance saving is small; the cost of acting on stale bean state is real.
+
 ## Session Close Protocol
 
 When ending a work session, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
